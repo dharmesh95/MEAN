@@ -1,1 +1,1 @@
-# MEAN
+# basic MEAN stack application
