@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 var Schema = mongoose.Schema({
-  createdAt:{
+  createdAt: {
     type: Date,
     default: Date.now
   },

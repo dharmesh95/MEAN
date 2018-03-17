@@ -7,6 +7,7 @@ import mongoose from 'mongoose';
 import SourceMapSupport from 'source-map-support';
 // import routes
 import todoRoutes from './routes/todo.server.route';
+import friendRoutes from './routes/friends.server.route';
 // define our app using express
 const app = express();
 // allow-cors
@@ -24,12 +25,20 @@ app.use(express.static(path.join(__dirname, 'public')));
 const port = process.env.PORT || 3001;
 // connect to database
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost/mern-todo-app', {
+/* mongoose.connect('mongodb://localhost/mern-todo-app', {
   useMongoClient: true,
+}); */
+mongoose.connect('mongodb://dharmesh:123@cluster0-shard-00-00-hwa4t.mongodb.net:27017,cluster0-shard-00-01-hwa4t.mongodb.net:27017,cluster0-shard-00-02-hwa4t.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin', function () {
+  // Hack the database back to the right one, because when using mongodb+srv as protocol.
+  if (mongoose.connection.client.s.url.startsWith('mongodb+srv')) {
+    mongoose.connection.db = mongoose.connection.client.db('test');
+    console.log('Connection to Mongo established.')
+  }
 });
 // add Source Map Support
 SourceMapSupport.install();
 app.use('/api', todoRoutes);
+app.use('/friend', friendRoutes);
 app.get('/', (req, res) => {
   return res.end('Api working');
 })
